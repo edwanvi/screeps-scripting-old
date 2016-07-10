@@ -1,3 +1,5 @@
+var rolebuilder = require('role.builder');
+
 module.exports = {
     // a function to run the logic for this role
     run: function(creep) {
@@ -20,11 +22,13 @@ module.exports = {
         if(creep.memory.working) {
             if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0]);    
+            } else if (targets.length == 0) {
+                roleBuilder.run(creep);
             }
         }
         else {
             // find closest source
-            var source = creep.pos.findClosestByPath(FIND_SOURCES);
+            var source = creep.pos.findClosestByPath(FIND_SOURCES, {algorithm: 'astar'});
             // try to harvest energy, if the source is not in range
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 // move towards the source

@@ -12,6 +12,10 @@ module.exports = {
             creep.memory.working = true;
         }
 
+        if(creep.memory.chosensource == null) {
+            //creep.memory.chosensource = creep.pos.findClosestByPath(FIND_SOURCES).id;
+        }
+
         // if creep is supposed to transfer energy to the controller
         if (creep.memory.working == true) {
             // instead of upgraderController we could also use:
@@ -26,7 +30,7 @@ module.exports = {
         // if creep is supposed to harvest energy from source
         else {
             // find closest source
-            var source = creep.pos.findClosestByPath(FIND_SOURCES);
+            var source = creep.pos.findClosestByPath(FIND_SOURCES, {algorithm: 'astar'});
             // try to harvest energy, if the source is not in range
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 // move towards the source
