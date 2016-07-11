@@ -1,4 +1,5 @@
 var roleUpgrader = require('role.upgrader');
+var extrautils = require("extrautils");
 
 module.exports = {
     // a function to run the logic for this role
@@ -12,6 +13,10 @@ module.exports = {
         else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
             // switch state
             creep.memory.working = true;
+        }
+
+        if (creep.memory.closestsource == null) {
+            extrautils.storeClosestSource.run(creep);
         }
 
         // if creep is supposed to complete a constructionSite
@@ -33,6 +38,7 @@ module.exports = {
         else {
             // find closest source
             var source = creep.pos.findClosestByPath(FIND_SOURCES, {algorithm: 'astar'});
+            //console.log(source.id);
             // try to harvest energy, if the source is not in range
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 // move towards the source
