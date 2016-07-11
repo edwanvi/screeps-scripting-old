@@ -6,13 +6,30 @@ var roleJanitor = require('role.janitor');
 var specs = require('specs');
 
 module.exports.loop = function () {
-    // check for memory entries of died creeps by iterating over Memory.creeps
+    // check for memory entries of dead creeps by iterating over Memory.creeps
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
     }
+
+    /* tower code
+    var tower = getObjectById('TOWER_ID');
+    if (tower) {
+        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => structure.hits < structure.hitsMax
+        });
+        if(closestDamagedStructure) {
+            tower.repair(closestDamagedStructure);
+        }
+
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if(closestHostile) {
+            tower.attack(closestHostile);
+        }
+    }
+    */
 
     // for every creep name in Game.creeps
     for (let name in Game.creeps) {
@@ -72,7 +89,7 @@ module.exports.loop = function () {
     }
     else if (numberOfJanitors < minimumNumberOfJanitors) {
         // try to spawn a janitor
-        name = Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], undefined, {role: 'janitor', working: false});
+        name = Game.spawns.Spawn1.createCreep(specs.janitorSpecs, undefined, {role: 'janitor', working: false});
     }
     else {
         // else try to spawn a builder
